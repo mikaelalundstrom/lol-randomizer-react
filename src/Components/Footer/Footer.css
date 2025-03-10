@@ -1,0 +1,28 @@
+footer {
+  background-color: var(--color-secondary);
+  padding: 4rem 3rem;
+  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-end;
+  margin-top: 8rem;
+
+  figure i {
+    font-size: 3rem;
+    display: inline-block;
+    transform: scale(-1, 1) rotate(0deg);
+    transition: color 0.3s, transform 1.5s;
+
+    &:hover {
+      transform: scale(-1, 1) rotate(360deg);
+    }
+  }
+
+  p {
+    font-size: 0.8rem;
+    text-align: right;
+    max-width: 40rem;
+    line-height: 1.8;
+  }
+}

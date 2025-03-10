@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nanum+Pen+Script&display=swap");
+
+:root {
+  --font-primary: "Inter", sans-serif;
+  --font-secondary: "Nanum Pen Script", cursive;
+  --color-black: #212229;
+  --color-grey: #6e7f86;
+  --color-white: #e8f1ff;
+  --color-white-20: rgba(232, 241, 255, 0.2);
+  --color-white-50: rgba(232, 241, 255, 0.5);
+  --color-primary: #2d9bbd;
+  --color-secondary: #3a5dcf;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-primary);
+}
+
+body {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+main {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 3rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+h2 {
+  font-size: 5rem;
+  font-weight: 900;
+
+  &.underlined {
+    text-decoration: underline 0.8rem var(--color-primary);
+  }
+
+  & ~ p {
+    margin-top: 2rem;
+  }
+}
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+
+  & + p {
+    margin-top: 2rem;
+  }
+}

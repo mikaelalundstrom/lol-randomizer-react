@@ -1,0 +1,18 @@
+header {
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  figure i {
+    font-size: 3rem;
+    display: inline-block;
+    transform: scale(-1, 1) rotate(0deg);
+    transition: color 0.3s, transform 1.5s;
+
+    &:hover {
+      color: var(--color-secondary);
+      transform: scale(-1, 1) rotate(360deg);
+    }
+  }
+}
