@@ -28,6 +28,19 @@ body {
   color: var(--color-white);
 }
 
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+  filter: blur(2rem);
+  object-fit: cover;
+  opacity: 0.6;
+
+  z-index: -1;
+}
+
 main {
   max-width: 70rem;
   margin: 0 auto;

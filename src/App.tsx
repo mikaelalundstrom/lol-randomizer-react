@@ -8,20 +8,8 @@ import Header from "./Components/Header/Header";
 import FlexGroup from "./Components/FlexGroup/FlexGroup";
 import axios from "axios";
 import CHAMPIONS from "./data/champions.json";
-
-interface IChamp {
-  id: string;
-  name: string;
-  title?: string;
-  included?: boolean;
-  roles?: string[];
-}
-
-interface IRole {
-  name: string;
-  icon: string;
-  active: boolean;
-}
+import { IChamp, IRole } from "./data/interfaces";
+import { AnimatePresence, motion } from "motion/react";
 
 const rolesList = [
   {
@@ -55,6 +43,7 @@ function App() {
   const [roles, setRoles] = useState(rolesList);
   const [version, setVersion] = useState("");
   const [champions, setChampions] = useState<IChamp[]>();
+  const [randomChamp, setRandomChamp] = useState<IChamp>();
 
   const formatChamps = async (champs: IChamp[]) => {
     try {
@@ -76,6 +65,7 @@ function App() {
       });
 
       setChampions(champions);
+      randomize(champions);
     } catch (error) {
       console.log(error);
     }
@@ -91,7 +81,21 @@ function App() {
     }
   };
 
-  const getRandomChamp = () => {};
+  const randomize = (champions: IChamp[] | undefined) => {
+    if (champions) {
+      const activeRoles = roles.filter((role) => role.active).map((role) => role.name);
+      const validChamps = champions
+        .filter((champion) => champion.included)
+        .filter((champion) => {
+          if (activeRoles.some((role) => champion.roles?.includes(role))) {
+            return champion;
+          }
+        });
+      const random = Math.floor(Math.random() * validChamps.length);
+      console.log(validChamps[random]);
+      setRandomChamp(validChamps[random]);
+    }
+  };
 
   const onRoleBtnClick = (roleToUpdate: IRole) => {
     const updateRoleStatus = roles.map((role) => {
@@ -145,14 +149,29 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (version) formatChamps(CHAMPIONS);
+    if (version) {
+      formatChamps(CHAMPIONS);
+    }
   }, [version]);
 
   return (
     <>
+      <AnimatePresence mode="popLayout">
+        <motion.img
+          key={randomChamp?.id + "RandomBg"}
+          transition={{ duration: 1, type: "spring" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="background"
+          src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${randomChamp?.id}_0.jpg`}
+          alt=""
+        />
+      </AnimatePresence>
+
       <Header title="Champion Randomizer" />
       <main>
-        <ChampDisplay />
+        {randomChamp && <ChampDisplay champion={randomChamp} />}
         <FlexGroup gap="1rem" margin="3rem 0" justifyContent="center">
           <Button
             text="All"
@@ -170,7 +189,13 @@ function App() {
           ))}
         </FlexGroup>
         <FlexGroup justifyContent="center">
-          <Button text="Randomize" pill btnStyle="secondary" size="l" />
+          <Button
+            text="Randomize"
+            pill
+            btnStyle="secondary"
+            size="l"
+            onClick={() => randomize(champions)}
+          />
         </FlexGroup>
 
         <FlexGroup justifyContent="space-between" alignItems="center" gap="4rem" margin="8rem 0">

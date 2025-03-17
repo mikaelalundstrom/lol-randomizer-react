@@ -1,0 +1,36 @@
+.label {
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 0.3rem;
+  color: var(--color-white);
+  background-color: var(--color-primary);
+  cursor: pointer;
+  transition: transform 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  figure {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+
+    img {
+      height: 100%;
+    }
+
+    i.ph {
+      font-size: 1.5rem;
+    }
+  }
+
+  &.label-primary {
+    background-color: var(--color-primary);
+  }
+
+  &.label-secondary {
+    background-color: var(--color-secondary);
+  }
+}

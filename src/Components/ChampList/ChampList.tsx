@@ -1,16 +1,8 @@
 import { useEffect, useState } from "react";
 import Icon from "../Icon/Icon";
 import "./ChampList.css";
-import { AnimatePresence } from "motion/react";
 import { motion } from "motion/react";
-
-interface IChamp {
-  id: string;
-  name: string;
-  title?: string;
-  included?: boolean;
-  roles?: string[];
-}
+import { IChamp } from "../../data/interfaces";
 
 interface ChampListProps {
   id: string;
@@ -61,7 +53,7 @@ function ChampList({ title, champions, version, removefromList, id }: ChampListP
               </div>
             </div>
           </motion.li>
-        ))}{" "}
+        ))}
       </ul>
     </div>
   );

@@ -1,4 +1,5 @@
 import Icon from "../Icon/Icon";
+import "./Label.css";
 
 interface LabelProps {
   text?: string;
@@ -11,8 +12,8 @@ interface LabelProps {
 function Label({ text, icon, iconPosition, size, labelStyle }: LabelProps) {
   return (
     <div className={`label size-${size} label-${labelStyle}`}>
-      {icon && iconPosition !== "last" && <Icon type={icon} />} {text}
-      {icon && iconPosition === "last" && <Icon type={icon} />}
+      {icon && iconPosition !== "last" && <Icon type={icon.toLowerCase()} />} {text}
+      {icon && iconPosition === "last" && <Icon type={icon.toLowerCase()} />}
     </div>
   );
 }
