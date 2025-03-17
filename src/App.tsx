@@ -14,6 +14,7 @@ interface IChamp {
   name: string;
   title?: string;
   included?: boolean;
+  roles?: string[];
 }
 
 interface IRole {
@@ -115,6 +116,30 @@ function App() {
     }
   };
 
+  const swapLists = () => {
+    if (champions) {
+      const swapped = champions.map((champion) => {
+        return { ...champion, included: !champion.included };
+      });
+
+      setChampions(swapped);
+    }
+  };
+
+  const removeFromList = (id: string) => {
+    if (champions) {
+      const updatedList = champions.map((champion) => {
+        if (champion.id === id) {
+          return { ...champion, included: !champion.included };
+        } else {
+          return champion;
+        }
+      });
+
+      setChampions(updatedList);
+    }
+  };
+
   useEffect(() => {
     getDDragonVer();
   }, []);
@@ -148,10 +173,22 @@ function App() {
           <Button text="Randomize" pill btnStyle="secondary" size="l" />
         </FlexGroup>
 
-        <FlexGroup justifyContent="space-between" alignItems="center" gap="4rem" margin="5rem 0">
-          <ChampList />
-          <Button icon="swap" size="l" btnStyle="label-only" />
-          <ChampList />
+        <FlexGroup justifyContent="space-between" alignItems="center" gap="4rem" margin="8rem 0">
+          <ChampList
+            title="Included Champions"
+            champions={champions?.filter((champion) => champion.included)}
+            version={version}
+            removefromList={removeFromList}
+            id="included"
+          />
+          <Button icon="swap" size="l" btnStyle="label-only" onClick={() => swapLists()} />
+          <ChampList
+            title="Excluded Champions"
+            champions={champions?.filter((champion) => !champion.included)}
+            version={version}
+            removefromList={removeFromList}
+            id="excluded"
+          />
         </FlexGroup>
 
         <div className="about">

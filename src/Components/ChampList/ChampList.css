@@ -1,5 +1,6 @@
 .champ-list {
   width: 100%;
+  align-self: flex-start;
   h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
@@ -30,15 +31,24 @@
     list-style: none;
     padding: 0 1rem;
     width: 100%;
-    max-height: 30rem;
-    overflow: scroll;
+    height: 30rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
 
     li {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
       border-top: 1px solid var(--color-white-20);
       padding: 1rem 0;
+
+      > div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s;
+      }
+
+      &:hover > div {
+        transform: scale(1.05);
+      }
 
       &:hover .name {
         transform: translate(0.5rem);

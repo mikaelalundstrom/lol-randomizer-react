@@ -17,6 +17,14 @@ button.button {
     background-color: var(--color-secondary);
   }
 
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
   figure {
     display: block;
     width: 1.5rem;
@@ -95,12 +103,16 @@ button.button {
   &.style-label-only {
     background-color: transparent;
     color: var(--color-white-50);
-    transition: color 0.3s;
+    transition: all 0.3s;
     padding: 0;
 
     &:hover {
       transform: none;
       color: var(--color-white);
+    }
+
+    &:active {
+      transform: scale(0.9);
     }
   }
 
