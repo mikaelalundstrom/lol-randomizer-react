@@ -8,7 +8,7 @@ import Header from "./Components/Header/Header";
 import FlexGroup from "./Components/FlexGroup/FlexGroup";
 import axios from "axios";
 import CHAMPIONS from "./data/champions.json";
-import { IChamp, IRole } from "./data/interfaces";
+import { IChamp, IRole, ISkin } from "./data/interfaces";
 import { AnimatePresence, motion } from "motion/react";
 
 const rolesList = [
@@ -39,11 +39,17 @@ const rolesList = [
   },
 ];
 
+const defaultSkin = {
+  name: "default",
+  id: 0,
+};
+
 function App() {
   const [roles, setRoles] = useState(rolesList);
   const [version, setVersion] = useState("");
   const [champions, setChampions] = useState<IChamp[]>();
   const [randomChamp, setRandomChamp] = useState<IChamp>();
+  const [skin, setSkin] = useState<ISkin>(defaultSkin);
 
   const formatChamps = async (champs: IChamp[]) => {
     try {
@@ -93,7 +99,26 @@ function App() {
         });
       const random = Math.floor(Math.random() * validChamps.length);
       console.log(validChamps[random]);
+      setSkin(defaultSkin);
       setRandomChamp(validChamps[random]);
+    }
+  };
+
+  const randomizeSkin = async () => {
+    try {
+      const response = await axios.get(
+        `https://ddragon.leagueoflegends.com/cdn/15.3.1/data/en_US/champion/${randomChamp?.id}.json`
+      );
+      console.log(response.data.data[randomChamp!.id].skins);
+      const skins = response.data.data[randomChamp!.id].skins;
+      const random = Math.floor(Math.random() * skins.length);
+      const randomSkin = {
+        id: skins[random].num,
+        name: skins[random].name,
+      };
+      setSkin(randomSkin);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -158,20 +183,22 @@ function App() {
     <>
       <AnimatePresence mode="popLayout">
         <motion.img
-          key={randomChamp?.id + "RandomBg"}
-          transition={{ duration: 1, type: "spring" }}
+          key={randomChamp?.id + "RandomBg" + skin.id}
+          transition={{ duration: 1.5, type: "spring" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="background"
-          src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${randomChamp?.id}_0.jpg`}
-          alt=""
+          src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${randomChamp?.id}_${skin.id}.jpg`}
+          alt={randomChamp?.name}
         />
       </AnimatePresence>
 
       <Header title="Champion Randomizer" />
       <main>
-        {randomChamp && <ChampDisplay champion={randomChamp} />}
+        {randomChamp && (
+          <ChampDisplay champion={randomChamp} skin={skin} randomizeSkin={randomizeSkin} />
+        )}
         <FlexGroup gap="1rem" margin="3rem 0" justifyContent="center">
           <Button
             text="All"

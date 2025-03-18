@@ -11,3 +11,8 @@ export interface IRole {
   icon: string;
   active: boolean;
 }
+
+export interface ISkin {
+  id: number;
+  name: string;
+}
