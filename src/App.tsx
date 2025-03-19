@@ -98,10 +98,18 @@ function App() {
             return champion;
           }
         });
-      const random = Math.floor(Math.random() * validChamps.length);
-      console.log(validChamps[random]);
-      setSkin(defaultSkin);
-      setRandomChamp(validChamps[random]);
+
+      if (validChamps.length === 0) {
+        console.log("No champions matched your selection");
+      } else {
+        let random = Math.floor(Math.random() * validChamps.length);
+        while (validChamps[random].id === randomChamp?.id && validChamps.length > 1) {
+          random = Math.floor(Math.random() * validChamps.length);
+        }
+        console.log(validChamps[random]);
+        setSkin(defaultSkin);
+        setRandomChamp(validChamps[random]);
+      }
     }
   };
 
@@ -125,7 +133,10 @@ function App() {
   };
 
   const randomizeSkin = async () => {
-    const random = Math.floor(Math.random() * champSkins.length);
+    let random = Math.floor(Math.random() * champSkins.length);
+    while (champSkins[random].id === skin?.id && champSkins.length > 1) {
+      random = Math.floor(Math.random() * champSkins.length);
+    }
     setSkin(champSkins[random]);
   };
 
@@ -236,7 +247,7 @@ function App() {
           />
         </FlexGroup>
 
-        <FlexGroup justifyContent="space-between" alignItems="center" gap="4rem" margin="8rem 0">
+        <FlexGroup justifyContent="space-between" alignItems="center" gap="4rem" margin="10rem 0">
           <ChampList
             title="Included Champions"
             champions={champions?.filter((champion) => champion.included)}

@@ -3,6 +3,7 @@ import Icon from "../Icon/Icon";
 import "./ChampList.css";
 import { motion } from "motion/react";
 import { IChamp } from "../../data/interfaces";
+import Button from "../Button/Button";
 
 interface ChampListProps {
   id: string;
@@ -19,7 +20,11 @@ function ChampList({ title, champions, version, removefromList, id }: ChampListP
 
   const search = () => {
     const filteredItems = champions?.filter((champion) => {
-      if (champion.name.toLowerCase().includes(searchInput.toLowerCase())) return champion;
+      if (searchInput.length < 3) {
+        if (champion.name.toLowerCase().startsWith(searchInput.toLowerCase())) return champion;
+      } else {
+        if (champion.name.toLowerCase().includes(searchInput.toLowerCase())) return champion;
+      }
     });
     setListItems(filteredItems);
   };
@@ -45,15 +50,21 @@ function ChampList({ title, champions, version, removefromList, id }: ChampListP
         {title || "Title"}
         <span>{" (" + (champions?.length || "0") + ")"}</span>
       </h3>
-      <input
-        onChange={(e) => {
-          setSearchInput(e.target.value);
-        }}
-        className="search"
-        type="text"
-        value={searchInput}
-        placeholder="Search..."
-      />
+      <div className="search">
+        <input
+          onChange={(e) => {
+            setSearchInput(e.target.value);
+          }}
+          className="search"
+          type="text"
+          value={searchInput}
+          placeholder="Search..."
+        />
+        {searchInput.length > 0 && (
+          <Button btnStyle="label-only" icon="close" size="s" onClick={() => setSearchInput("")} />
+        )}
+      </div>
+
       <motion.ul layoutScroll className="list">
         {listItems?.map((champion) => (
           <motion.li

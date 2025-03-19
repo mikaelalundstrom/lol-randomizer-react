@@ -12,6 +12,7 @@ const icons = {
   support: <img src={supportIcon} alt="Support" />,
   swap: <i className="ph ph-arrows-left-right"></i>,
   refresh: <i className="ph ph-arrows-clockwise"></i>,
+  close: <i className="ph ph-x"></i>,
   dice: <i className="ph-bold ph-dice-three"></i>,
 };
 
