@@ -52,12 +52,19 @@ function App() {
   const [champSkins, setChampSkins] = useState<ISkin[]>([defaultSkin]);
   const [skin, setSkin] = useState<ISkin>(defaultSkin);
 
+  function setLSChampions(champions: IChamp[]) {
+    localStorage.setItem("LoLRandom_Champs", JSON.stringify(champions));
+  }
+
+  function getLSChampions() {
+    return JSON.parse(localStorage.getItem("LoLRandom_Champs")!) || [];
+  }
+
   const formatChamps = async (champs: IChamp[]) => {
     try {
       const response = await axios.get(
         `https://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/champion.json`
       );
-      console.log(response.data.data);
 
       const data = response.data.data;
 
@@ -81,7 +88,6 @@ function App() {
   const getDDragonVer = async () => {
     try {
       const response = await axios.get("https://ddragon.leagueoflegends.com/api/versions.json");
-      console.log(response.data[0]);
       setVersion(response.data[0]);
     } catch (error) {
       console.log(error);
@@ -90,7 +96,9 @@ function App() {
 
   const randomize = (champions: IChamp[] | undefined) => {
     if (champions) {
-      const activeRoles = roles.filter((role) => role.active).map((role) => role.name);
+      let activeRoles = roles.filter((role) => role.active).map((role) => role.name);
+      // do a randomize on all roles if none are selected
+      if (activeRoles.length === 0) activeRoles = roles.map((role) => role.name);
       const validChamps = champions
         .filter((champion) => champion.included)
         .filter((champion) => {
@@ -106,7 +114,7 @@ function App() {
         while (validChamps[random].id === randomChamp?.id && validChamps.length > 1) {
           random = Math.floor(Math.random() * validChamps.length);
         }
-        console.log(validChamps[random]);
+
         setSkin(defaultSkin);
         setRandomChamp(validChamps[random]);
       }
@@ -118,7 +126,6 @@ function App() {
       const response = await axios.get(
         `https://ddragon.leagueoflegends.com/cdn/15.3.1/data/en_US/champion/${randomChamp?.id}.json`
       );
-      console.log(response.data.data[randomChamp!.id].skins);
       const skins = response.data.data[randomChamp!.id].skins;
       const formattedSkins = skins.map((skin: { num: string; name: string }) => {
         return {
@@ -193,13 +200,24 @@ function App() {
 
   useEffect(() => {
     if (version) {
-      formatChamps(CHAMPIONS);
+      const champs = getLSChampions();
+
+      if (champs.length === 0) {
+        formatChamps(CHAMPIONS);
+      } else {
+        setChampions(champs);
+        randomize(champs);
+      }
     }
   }, [version]);
 
   useEffect(() => {
     getSkins();
   }, [randomChamp]);
+
+  useEffect(() => {
+    if (champions) setLSChampions(champions);
+  }, [champions]);
 
   return (
     <>
@@ -208,7 +226,7 @@ function App() {
           key={randomChamp?.id + "RandomBg" + skin.id}
           transition={{ duration: 1.5, type: "spring" }}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={{ opacity: 0.8 }}
           exit={{ opacity: 0 }}
           className="background"
           src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${randomChamp?.id}_${skin.id}.jpg`}

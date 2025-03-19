@@ -34,7 +34,7 @@ function ChampDisplay({ champion, skin, randomizeSkin }: ChampDisplayProps) {
         exit={{ scale: 0, rotate: -25, opacity: 0 }}
         className="champ-display"
         style={{
-          backgroundImage: `radial-gradient(circle, rgba(33, 34, 41, 0) 0%, rgba(33, 34, 41, 0.8) 100%), url("https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${randomChamp?.id}_${champSkin.id}.jpg")`,
+          backgroundImage: `radial-gradient(circle, rgba(33, 34, 41, 0.1) 0%, rgba(33, 34, 41, 0.8) 100%), url("https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${randomChamp?.id}_${champSkin.id}.jpg")`,
         }}
       >
         <div className="info">
