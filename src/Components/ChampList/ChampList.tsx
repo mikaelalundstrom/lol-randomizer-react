@@ -14,10 +14,30 @@ interface ChampListProps {
 
 function ChampList({ title, champions, version, removefromList, id }: ChampListProps) {
   const [ver, setVer] = useState(version);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [listItems, setListItems] = useState<IChamp[] | undefined>(champions);
+
+  const search = () => {
+    const filteredItems = champions?.filter((champion) => {
+      if (champion.name.toLowerCase().includes(searchInput.toLowerCase())) return champion;
+    });
+    setListItems(filteredItems);
+  };
 
   useEffect(() => {
     setVer(version);
   }, [version]);
+
+  useEffect(() => {
+    search();
+  }, [searchInput]);
+
+  useEffect(() => {
+    setListItems(champions);
+    if (searchInput.length > 0) {
+      search();
+    }
+  }, [champions]);
 
   return (
     <div className="champ-list">
@@ -25,9 +45,17 @@ function ChampList({ title, champions, version, removefromList, id }: ChampListP
         {title || "Title"}
         <span>{" (" + (champions?.length || "0") + ")"}</span>
       </h3>
-      <input className="search" type="text" placeholder="Search..." />
-      <ul className="list">
-        {champions?.map((champion) => (
+      <input
+        onChange={(e) => {
+          setSearchInput(e.target.value);
+        }}
+        className="search"
+        type="text"
+        value={searchInput}
+        placeholder="Search..."
+      />
+      <motion.ul layoutScroll className="list">
+        {listItems?.map((champion) => (
           <motion.li
             key={champion.id}
             transition={{ duration: 0.7, type: "spring", delay: 0.1 }}
@@ -54,7 +82,7 @@ function ChampList({ title, champions, version, removefromList, id }: ChampListP
             </div>
           </motion.li>
         ))}
-      </ul>
+      </motion.ul>
     </div>
   );
 }

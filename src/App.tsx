@@ -49,6 +49,7 @@ function App() {
   const [version, setVersion] = useState("");
   const [champions, setChampions] = useState<IChamp[]>();
   const [randomChamp, setRandomChamp] = useState<IChamp>();
+  const [champSkins, setChampSkins] = useState<ISkin[]>([defaultSkin]);
   const [skin, setSkin] = useState<ISkin>(defaultSkin);
 
   const formatChamps = async (champs: IChamp[]) => {
@@ -104,22 +105,28 @@ function App() {
     }
   };
 
-  const randomizeSkin = async () => {
+  const getSkins = async () => {
     try {
       const response = await axios.get(
         `https://ddragon.leagueoflegends.com/cdn/15.3.1/data/en_US/champion/${randomChamp?.id}.json`
       );
       console.log(response.data.data[randomChamp!.id].skins);
       const skins = response.data.data[randomChamp!.id].skins;
-      const random = Math.floor(Math.random() * skins.length);
-      const randomSkin = {
-        id: skins[random].num,
-        name: skins[random].name,
-      };
-      setSkin(randomSkin);
+      const formattedSkins = skins.map((skin: { num: string; name: string }) => {
+        return {
+          id: skin.num,
+          name: skin.name,
+        };
+      });
+      setChampSkins(formattedSkins);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const randomizeSkin = async () => {
+    const random = Math.floor(Math.random() * champSkins.length);
+    setSkin(champSkins[random]);
   };
 
   const onRoleBtnClick = (roleToUpdate: IRole) => {
@@ -178,6 +185,10 @@ function App() {
       formatChamps(CHAMPIONS);
     }
   }, [version]);
+
+  useEffect(() => {
+    getSkins();
+  }, [randomChamp]);
 
   return (
     <>
